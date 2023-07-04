@@ -64,7 +64,7 @@ class DatePicker extends StatefulWidget {
     this.startDate, {
     Key? key,
     this.width = 60,
-    this.height = 80,
+    this.height = 70,
     this.controller,
     this.monthTextStyle = defaultMonthTextStyle,
     this.dayTextStyle = defaultDayTextStyle,
@@ -107,7 +107,9 @@ class _DatePickerState extends State<DatePicker> {
     // Set initial Values
     _currentDate = widget.initialSelectedDate;
 
-    widget.controller?.setDatePickerState(this);
+    if (widget.controller != null) {
+      widget.controller!.setDatePickerState(this);
+    }
 
     this.selectedDateStyle =
       widget.dateTextStyle.copyWith(color: widget.selectedTextColor);
@@ -145,8 +147,9 @@ class _DatePickerState extends State<DatePicker> {
 
           // check if this date needs to be deactivated for only DeactivatedDates
           if (widget.inactiveDates != null) {
+//            print("Inside Inactive dates.");
             for (DateTime inactiveDate in widget.inactiveDates!) {
-              if (DateUtils.isSameDay(date, inactiveDate)) {
+              if (_compareDate(date, inactiveDate)) {
                 isDeactivated = true;
                 break;
               }
@@ -157,7 +160,8 @@ class _DatePickerState extends State<DatePicker> {
           if (widget.activeDates != null) {
             isDeactivated = true;
             for (DateTime activateDate in widget.activeDates!) {
-              if (DateUtils.isSameDay(date, activateDate)) {
+              // Compare the date if it is in the
+              if (_compareDate(date, activateDate)) {
                 isDeactivated = false;
                 break;
               }
@@ -165,9 +169,8 @@ class _DatePickerState extends State<DatePicker> {
           }
 
           // Check if this date is the one that is currently selected
-          bool isSelected = _currentDate != null
-              ? DateUtils.isSameDay(date, _currentDate!)
-              : false;
+          bool isSelected =
+              _currentDate != null ? _compareDate(date, _currentDate!) : false;
 
           // Return the Date Widget
           return DateWidget(
@@ -185,7 +188,8 @@ class _DatePickerState extends State<DatePicker> {
             dayTextStyle: isDeactivated
                 ? deactivatedDayStyle
                 : isSelected
-                    ? selectedDayStyle
+                    // ? selectedDayStyle
+                    ? TextStyle(fontSize: 15)
                     : widget.dayTextStyle,
             width: widget.width,
             locale: widget.locale,
@@ -196,8 +200,9 @@ class _DatePickerState extends State<DatePicker> {
               if (isDeactivated) return;
 
               // A date is selected
-              widget.onDateChange?.call(selectedDate);
-
+              if (widget.onDateChange != null) {
+                widget.onDateChange!(selectedDate);
+              }
               setState(() {
                 _currentDate = selectedDate;
               });
@@ -206,6 +211,14 @@ class _DatePickerState extends State<DatePicker> {
         },
       ),
     );
+  }
+
+  /// Helper function to compare two dates
+  /// Returns True if both dates are the same
+  bool _compareDate(DateTime date1, DateTime date2) {
+    return date1.day == date2.day &&
+        date1.month == date2.month &&
+        date1.year == date2.year;
   }
 }
 
