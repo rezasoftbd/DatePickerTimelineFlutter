@@ -189,7 +189,7 @@ class _DatePickerState extends State<DatePicker> {
                 ? deactivatedDayStyle
                 : isSelected
                     // ? selectedDayStyle
-                    ? TextStyle(fontSize: 15)
+                    ? TextStyle(fontSize: 13,color: Colors.white,fontWeight: FontWeight.w500)
                     : widget.dayTextStyle,
             width: widget.width,
             locale: widget.locale,
