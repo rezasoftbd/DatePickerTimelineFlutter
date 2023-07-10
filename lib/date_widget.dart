@@ -33,9 +33,8 @@ class DateWidget extends StatelessWidget {
     return InkWell(
       child: Container(
         width: width,
-        margin: const EdgeInsets.all(3.0),
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: selectionColor,
         ),
         child: Padding(
@@ -44,12 +43,11 @@ class DateWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(new DateFormat("MMM", locale).format(date).toUpperCase(), // Month
-                  style: monthTextStyle),
+              Text(new DateFormat("E", locale).format(date), // WeekDay
+                  style: dayTextStyle),
+              Expanded(child: Container()),
               Text(date.day.toString(), // Date
                   style: dateTextStyle),
-              Text(new DateFormat("E", locale).format(date).toUpperCase(), // WeekDay
-                  style: dayTextStyle)
             ],
           ),
         ),
